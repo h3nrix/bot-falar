@@ -1,9 +1,13 @@
 {
-  "name": "bot-lan-csgo",
+  "name": "bot-falar",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node index.js"
+  },
   "dependencies": {
-    "discord.js": "^14.15.3",
+    "discord.js": "^14.16.3",
     "dotenv": "^16.4.5"
   }
 }
