@@ -11,15 +11,18 @@ const client = new Client({
   intents: [GatewayIntentBits.Guilds]
 });
 
-// ===== COMANDO SIMPLES /falar =====
+// 🔥 COLOQUE AQUI O ID DO SEU SERVIDOR
+const GUILD_ID = "1498051855543173322";
+
+// ===== COMANDO /falar =====
 const commands = [
   new SlashCommandBuilder()
     .setName("falar")
-    .setDescription("Faz o bot falar")
+    .setDescription("Faz o bot enviar uma mensagem no chat")
     .addStringOption(option =>
       option
         .setName("mensagem")
-        .setDescription("Mensagem do bot")
+        .setDescription("Mensagem que o bot vai enviar")
         .setRequired(true)
     )
     .toJSON()
@@ -27,35 +30,41 @@ const commands = [
 
 const rest = new REST({ version: "10" }).setToken(process.env.TOKEN);
 
+// ===== READY =====
 client.once("ready", async () => {
-  console.log(`Logado como ${client.user.tag}`);
+  console.log(`✅ Logado como ${client.user.tag}`);
 
   try {
     await rest.put(
-      Routes.applicationGuildCommands(client.user.id, "1498051855543173322"),
+      Routes.applicationGuildCommands(client.user.id, GUILD_ID),
       { body: commands }
     );
 
-    console.log("Comandos registrados!");
+    console.log("✅ Slash command /falar registrado!");
   } catch (err) {
-    console.error(err);
+    console.error("❌ Erro ao registrar comandos:", err);
   }
 });
 
-    console.log("✅ Slash command registrado!");
-  } catch (err) {
-    console.error("Erro ao registrar comando:", err);
-  }
-});
-
+// ===== INTERAÇÃO =====
 client.on("interactionCreate", async (interaction) => {
   if (!interaction.isChatInputCommand()) return;
 
   if (interaction.commandName === "falar") {
     const msg = interaction.options.getString("mensagem");
 
-    // envia direto no canal
-    await interaction.reply({ content: "✅ Mensagem enviada!", ephemeral: true });
+    if (!msg) {
+      return interaction.reply({
+        content: "❌ Você precisa escrever uma mensagem.",
+        ephemeral: true
+      });
+    }
+
+    await interaction.reply({
+      content: "✅ Mensagem enviada!",
+      ephemeral: true
+    });
+
     await interaction.channel.send(msg);
   }
 });
