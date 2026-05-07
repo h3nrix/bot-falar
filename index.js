@@ -28,17 +28,19 @@ const commands = [
 const rest = new REST({ version: "10" }).setToken(process.env.TOKEN);
 
 client.once("ready", async () => {
-  console.log(`✅ Logado como ${client.user.tag}`);
+  console.log(`Logado como ${client.user.tag}`);
 
   try {
-    // REGISTRA OS COMANDOS GLOBALMENTE
     await rest.put(
-  Routes.applicationGuildCommands(
-    client.user.id,
-    "1498051855543173322"
-  ),
-  { body: commands }
-);
+      Routes.applicationGuildCommands(client.user.id, "1498051855543173322"),
+      { body: commands }
+    );
+
+    console.log("Comandos registrados!");
+  } catch (err) {
+    console.error(err);
+  }
+});
 
     console.log("✅ Slash command registrado!");
   } catch (err) {
