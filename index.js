@@ -11,27 +11,27 @@ const client = new Client({
   intents: [GatewayIntentBits.Guilds]
 });
 
-// ===== COMANDO /falar =====
+// ===== COMANDO SIMPLES /falar =====
 const commands = [
   new SlashCommandBuilder()
     .setName("falar")
-    .setDescription("Faz o bot falar uma mensagem")
+    .setDescription("Faz o bot falar")
     .addStringOption(option =>
       option
         .setName("mensagem")
-        .setDescription("Mensagem para o bot enviar")
+        .setDescription("Mensagem do bot")
         .setRequired(true)
     )
     .toJSON()
 ];
 
-// REGISTRAR COMANDO
 const rest = new REST({ version: "10" }).setToken(process.env.TOKEN);
 
 client.once("ready", async () => {
   console.log(`✅ Logado como ${client.user.tag}`);
 
   try {
+    // REGISTRA OS COMANDOS GLOBALMENTE
     await rest.put(
       Routes.applicationCommands(client.user.id),
       { body: commands }
@@ -39,22 +39,18 @@ client.once("ready", async () => {
 
     console.log("✅ Slash command registrado!");
   } catch (err) {
-    console.error(err);
+    console.error("Erro ao registrar comando:", err);
   }
 });
 
-// INTERAÇÃO DO COMANDO
 client.on("interactionCreate", async (interaction) => {
   if (!interaction.isChatInputCommand()) return;
 
   if (interaction.commandName === "falar") {
     const msg = interaction.options.getString("mensagem");
 
-    // deleta a interação (pra ficar "limpo")
-    await interaction.deferReply({ ephemeral: true });
-    await interaction.deleteReply().catch(() => {});
-
-    // envia a mensagem no chat
+    // envia direto no canal
+    await interaction.reply({ content: "✅ Mensagem enviada!", ephemeral: true });
     await interaction.channel.send(msg);
   }
 });
