@@ -33,7 +33,7 @@ client.once("ready", async () => {
   try {
     // REGISTRA OS COMANDOS GLOBALMENTE
     await rest.put(
-      Routes.applicationCommands(client.user.id),
+      Routes.applicationGuildCommands(1498051855543173322)
       { body: commands }
     );
 
