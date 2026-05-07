@@ -33,9 +33,12 @@ client.once("ready", async () => {
   try {
     // REGISTRA OS COMANDOS GLOBALMENTE
     await rest.put(
-      Routes.applicationGuildCommands(1498051855543173322)
-      { body: commands }
-    );
+  Routes.applicationGuildCommands(
+    client.user.id,
+    "1498051855543173322"
+  ),
+  { body: commands }
+);
 
     console.log("✅ Slash command registrado!");
   } catch (err) {
